@@ -594,7 +594,7 @@
         
         // تعيين القيمة الافتراضية لتاريخ الميلاد (15 نوفمبر 1999)
         if (!stored) {
-            const defaultDate = new Date(1999, 10, 15); // شهر 10 هو نوفمبر (0-indexed)
+            const defaultDate = new Date(2000, 9, 29); // شهر 10 هو نوفمبر (0-indexed)
             input.value = defaultDate.toISOString().split('T')[0];
         } else {
             input.value = stored;
