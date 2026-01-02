@@ -202,8 +202,58 @@
                     </div>
                 </div>
             </section>
+            <!-- آية واقتباس -->
+<section class="px-4 pt-4 pb-2">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- كارت الآية -->
+        <div class="rounded-2xl bg-white dark:bg-surface-dark p-6 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+            <div class="flex flex-col items-center">
+                <span class="material-symbols-outlined mb-2 text-3xl text-primary/20">menu_book</span>
+                <p id="ayahText" class="font-display text-lg font-bold leading-relaxed text-gray-900 dark:text-white text-center">
+                    "وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ"
+                </p>
+                <span id="ayahInfo" class="mt-2 text-xs font-medium text-gray-400 dark:text-gray-500">سورة النجم - ٣٩</span>
+            </div>
+            <div class="my-4 border-t border-gray-100 dark:border-white/5"></div>
+            <div class="flex flex-col items-center">
+                <p id="ayahTafsirText" class="text-sm font-medium leading-relaxed text-gray-600 dark:text-[#c8a992] text-center">
+                    لكل إنسان جزاء سعيه وعمله، ولا يحمل وزر غيره
+                </p>
+                <div class="mt-3">
+                    <button id="refreshAyah" class="text-xs font-medium text-primary hover:text-primary-dark transition-colors flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">refresh</span>
+                        تغيير الآية
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- كارت الاقتباس -->
+        <div class="rounded-2xl bg-white dark:bg-surface-dark p-6 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+            <div class="flex flex-col items-center">
+                <span class="material-symbols-outlined mb-2 text-3xl text-primary/20">format_quote</span>
+                <p id="quoteText" class="font-display text-lg font-bold leading-relaxed text-gray-900 dark:text-white text-center">
+                    "النجاح هو مجموع مجهودات صغيرة تتكرر يوماً بعد يوم."
+                </p>
+                <span id="quoteAuthor" class="mt-2 text-xs font-medium text-gray-400 dark:text-gray-500">روبرت كولير</span>
+            </div>
+            <div class="my-4 border-t border-gray-100 dark:border-white/5"></div>
+            <div class="flex flex-col items-center">
+                <p id="quoteSource" class="text-sm font-medium leading-relaxed text-gray-600 dark:text-[#c8a992] text-center">
+                    كتاب "The Secret of the Ages"
+                </p>
+                <div class="mt-3">
+                    <button id="refreshQuote" class="text-xs font-medium text-primary hover:text-primary-dark transition-colors flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">refresh</span>
+                        تغيير الاقتباس
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
             
-            <!-- الكروت الإحصائية -->
+            <!-- النظرة العامة -->
             <section class="px-4 pt-4">
                 <div class="mb-4 flex items-center justify-between">
                     <h2 class="text-lg font-bold text-gray-900 dark:text-white">نظرة عامة</h2>
@@ -298,46 +348,27 @@
                 </div>
             </section>
             
-            <!-- آية واقتباس -->
-            <section class="px-4 pt-6 pb-4">
-                <div class="rounded-2xl bg-white dark:bg-surface-dark p-6 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
-                    <div class="flex flex-col items-center">
-                        <span class="material-symbols-outlined mb-2 text-3xl text-primary/20">format_quote</span>
-                        <p id="ayahText" class="font-display text-lg font-bold leading-relaxed text-gray-900 dark:text-white text-center">
-                            "وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ"
-                        </p>
-                        <span id="ayahInfo" class="mt-2 text-xs font-medium text-gray-400 dark:text-gray-500">سورة النجم - ٣٩</span>
-                    </div>
-                    <div class="my-4 border-t border-gray-100 dark:border-white/5"></div>
-                    <div class="flex flex-col items-center">
-                        <p id="quoteText" class="text-sm font-medium leading-relaxed text-gray-600 dark:text-[#c8a992] text-center">
-                            "النجاح هو مجموع مجهودات صغيرة تتكرر يوماً بعد يوم."
-                        </p>
-                        <div class="mt-3 flex gap-2">
-                            <button id="refreshAyah" class="text-xs font-medium text-primary hover:text-primary-dark transition-colors">تغيير الآية</button>
-                            <span class="text-gray-300">•</span>
-                            <button id="refreshQuote" class="text-xs font-medium text-primary hover:text-primary-dark transition-colors">تغيير الاقتباس</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- إحصائيات إضافية -->
-            <section class="px-4 pb-6">
+            <!-- إحصائيات الوقت -->
+            <section class="px-4 pt-6 pb-6">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">إحصائيات الوقت</h3>
-                <div class="grid grid-cols-3 gap-3">
+                <div class="grid grid-cols-4 gap-3">
                     <div class="rounded-xl bg-white dark:bg-surface-dark p-4 text-center shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
                         <span class="material-symbols-outlined text-primary block mb-2">today</span>
                         <span class="text-2xl font-bold text-gray-900 dark:text-white" id="currentWeek">24</span>
                         <span class="text-xs text-gray-500 dark:text-[#c8a992] block mt-1">الأسبوع الحالي</span>
                     </div>
                     <div class="rounded-xl bg-white dark:bg-surface-dark p-4 text-center shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
-                        <span class="material-symbols-outlined text-blue-500 block mb-2">date_range</span>
+                        <span class="material-symbols-outlined text-primary block mb-2">event</span>
+                        <span class="text-2xl font-bold text-gray-900 dark:text-white" id="daysInMonth">30</span>
+                        <span class="text-xs text-gray-500 dark:text-[#c8a992] block mt-1">أيام الشهر</span>
+                    </div>
+                    <div class="rounded-xl bg-white dark:bg-surface-dark p-4 text-center shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+                        <span class="material-symbols-outlined text-primary block mb-2">date_range</span>
                         <span class="text-2xl font-bold text-gray-900 dark:text-white" id="daysInYear">365</span>
                         <span class="text-xs text-gray-500 dark:text-[#c8a992] block mt-1">يوم في السنة</span>
                     </div>
                     <div class="rounded-xl bg-white dark:bg-surface-dark p-4 text-center shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
-                        <span class="material-symbols-outlined text-emerald-500 block mb-2">schedule</span>
+                        <span class="material-symbols-outlined text-primary block mb-2">schedule</span>
                         <span class="text-2xl font-bold text-gray-900 dark:text-white" id="hoursLeft">8760</span>
                         <span class="text-xs text-gray-500 dark:text-[#c8a992] block mt-1">ساعة متبقية</span>
                     </div>
@@ -494,6 +525,69 @@
         autoRefresh: true
     };
     
+    // قائمة الآيات الافتراضية مع تفسير
+    const DEFAULT_AYAHS = [
+        {
+            text: "وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ",
+            surah: "النجم",
+            number: 39,
+            tafsir: "لكل إنسان جزاء سعيه وعمله، ولا يحمل وزر غيره"
+        },
+        {
+            text: "إِنَّ مَعَ الْعُسْرِ يُسْرًا",
+            surah: "الشرح",
+            number: 6,
+            tafsir: "بعد كل صعوبة تأتي اليسر والفرج"
+        },
+        {
+            text: "وَاصْبِرْ لِحُكْمِ رَبِّكَ فَإِنَّكَ بِأَعْيُنِنَا",
+            surah: "الطور",
+            number: 48,
+            tafsir: "الصبر مفتاح الفرج، وأنت تحت رعاية الله وحفظه"
+        },
+        {
+            text: "إِنَّ اللَّهَ لَا يُغَيِّرُ مَا بِقَوْمٍ حَتَّىٰ يُغَيِّرُوا مَا بِأَنفُسِهِمْ",
+            surah: "الرعد",
+            number: 11,
+            tafsir: "التغيير يبدأ من الداخل، فإذا أردت تغيير حالك فابدأ بنفسك"
+        },
+        {
+            text: "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا",
+            surah: "الطلاق",
+            number: 2,
+            tafsir: "التقوى مفتاح للخروج من الأزمات وتذليل الصعاب"
+        }
+    ];
+    
+    // قائمة الاقتباسات الافتراضية
+    const DEFAULT_QUOTES = [
+        {
+            content: "النجاح هو مجموع مجهودات صغيرة تتكرر يوماً بعد يوم.",
+            author: "روبرت كولير",
+            source: "كتاب 'The Secret of the Ages'"
+        },
+        {
+            content: "لا تؤجل عمل اليوم إلى الغد، فربما لا يأتي الغد.",
+            author: "مثل عربي",
+            source: "الأمثال العربية"
+        },
+        {
+            content: "الوقت كالسيف إن لم تقطعه قطعك.",
+            author: "علي بن أبي طالب",
+            source: "حكم الإمام علي"
+        },
+        {
+            content: "العمر قصير، والعلم طويل، فاستغل وقتك في ما ينفعك.",
+            author: "ابن قيم الجوزية",
+            source: "مفتاح دار السعادة"
+        },
+        {
+            content: "أفضل وقت لزرع شجرة كان قبل 20 سنة، والثاني أفضل وقت هو الآن.",
+            author: "مثل صيني",
+            source: "الحكمة الصينية"
+        }
+    ];
+    
     /* ===============================
        تهيئة الصفحة
     ================================ */
@@ -594,7 +688,7 @@
         
         // تعيين القيمة الافتراضية لتاريخ الميلاد (15 نوفمبر 1999)
         if (!stored) {
-            const defaultDate = new Date(2000, 9, 29); // شهر 10 هو نوفمبر (0-indexed)
+            const defaultDate = new Date(1999, 10, 15); // شهر 10 هو نوفمبر (0-indexed)
             input.value = defaultDate.toISOString().split('T')[0];
         } else {
             input.value = stored;
@@ -721,6 +815,10 @@
         const weekNumber = Math.ceil((days + startOfYear.getDay() + 1) / 7);
         document.getElementById("currentWeek").textContent = weekNumber;
         
+        // حساب عدد الأيام في الشهر الحالي
+        const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+        document.getElementById("daysInMonth").textContent = daysInMonth;
+        
         // حساب عدد الأيام في السنة
         const isLeapYear = (now.getFullYear() % 4 === 0 && now.getFullYear() % 100 !== 0) || 
                           (now.getFullYear() % 400 === 0);
@@ -752,18 +850,33 @@
             `<span class="skeleton block h-6 w-full rounded"></span>`;
         document.getElementById("ayahInfo").innerHTML = 
             `<span class="skeleton block h-4 w-24 rounded"></span>`;
+        document.getElementById("ayahTafsirText").innerHTML = 
+            `<span class="skeleton block h-4 w-full rounded"></span>`;
         
         try {
-            // جلب آية عشوائية
+            // محاولة استخدام API
             const res = await fetch("https://api.alquran.cloud/v1/ayah/random");
             const data = await res.json();
             
             if (data.code === 200 && data.data) {
+                // جلب التفسير
+                let tafsir = "تفسير الآية";
+                try {
+                    const tafsirRes = await fetch(`https://api.alquran.cloud/v1/ayah/${data.data.surah.number}:${data.data.numberInSurah}/ar.muyassar`);
+                    const tafsirData = await tafsirRes.json();
+                    if (tafsirData.data && tafsirData.data.text) {
+                        tafsir = tafsirData.data.text;
+                    }
+                } catch (tafsirError) {
+                    console.log("فشل تحميل التفسير:", tafsirError);
+                }
+                
                 const ayahData = {
                     text: data.data.text,
                     surah: data.data.surah.name,
                     number: data.data.numberInSurah,
-                    surahNumber: data.data.surah.number
+                    surahNumber: data.data.surah.number,
+                    tafsir: tafsir
                 };
                 
                 localStorage.setItem(AYAH_KEY, JSON.stringify(ayahData));
@@ -774,25 +887,28 @@
                 if (forceRefresh) {
                     showNotification("تم تحديث الآية بنجاح", "success");
                 }
+            } else {
+                throw new Error("فشل تحميل الآية من API");
             }
         } catch (error) {
-            console.log("فشل تحميل الآية:", error);
-            // استخدام آية افتراضية في حالة الفشل
-            const defaultAyah = {
-                text: "وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ",
-                surah: "النجم",
-                number: 39,
-                surahNumber: 53
-            };
-            renderAyah(defaultAyah);
+            console.log("فشل تحميل الآية من API، استخدام الآيات المحلية:", error);
+            // استخدام آية عشوائية من القائمة المحلية
+            const randomIndex = Math.floor(Math.random() * DEFAULT_AYAHS.length);
+            const ayahData = DEFAULT_AYAHS[randomIndex];
+            
+            localStorage.setItem(AYAH_KEY, JSON.stringify(ayahData));
+            localStorage.setItem(AYAH_DATE_KEY, today);
+            
+            renderAyah(ayahData);
         }
     }
     
     function renderAyah(ayah) {
-        document.getElementById("ayahText").textContent = `"${ayah.text}"`;
-        document.getElementById("ayahInfo").textContent = 
-            `${ayah.surah} - ${ayah.number}`;
-    }
+    document.getElementById("ayahText").textContent = `"${ayah.text}"`;
+    document.getElementById("ayahInfo").textContent =
+        `${ayah.surah} - ${ayah.number}`;
+    document.getElementById("ayahTafsirText").textContent = ayah.tafsir;
+}
     
     /* ===============================
        إدارة الاقتباسات
@@ -812,14 +928,15 @@
             `<span class="skeleton block h-5 w-full rounded"></span>`;
         
         try {
-            // جلب اقتباس عشوائي
-            const res = await fetch("https://api.quotable.io/random");
+            // محاولة استخدام API
+            const res = await fetch("https://api.quotable.io/random?maxLength=100");
             const data = await res.json();
             
             if (data) {
                 const quoteData = {
                     content: data.content,
-                    author: data.author
+                    author: data.author,
+                    source: "Quotable API"
                 };
                 
                 localStorage.setItem(QUOTE_KEY, JSON.stringify(quoteData));
@@ -828,20 +945,24 @@
                 if (forceRefresh) {
                     showNotification("تم تحديث الاقتباس بنجاح", "success");
                 }
+            } else {
+                throw new Error("فشل تحميل الاقتباس من API");
             }
         } catch (error) {
-            console.log("فشل تحميل الاقتباس:", error);
-            // استخدام اقتباس افتراضي في حالة الفشل
-            const defaultQuote = {
-                content: "النجاح هو مجموع مجهودات صغيرة تتكرر يوماً بعد يوم.",
-                author: "روبرت كولير"
-            };
-            renderQuote(defaultQuote);
+            console.log("فشل تحميل الاقتباس من API، استخدام الاقتباسات المحلية:", error);
+            // استخدام اقتباس عشوائي من القائمة المحلية
+            const randomIndex = Math.floor(Math.random() * DEFAULT_QUOTES.length);
+            const quoteData = DEFAULT_QUOTES[randomIndex];
+            
+            localStorage.setItem(QUOTE_KEY, JSON.stringify(quoteData));
+            renderQuote(quoteData);
         }
     }
     
     function renderQuote(quote) {
         document.getElementById("quoteText").textContent = `"${quote.content}"`;
+        document.getElementById("quoteAuthor").textContent = quote.author;
+        document.getElementById("quoteSource").textContent = quote.source || "مصدر الاقتباس";
     }
     
     /* ===============================
