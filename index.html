@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>لوحة التحكم الرئيسية</title>
+    <title>لوحة التحكم الشخصية - إدارة الوقت والإنتاجية</title>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -41,6 +41,8 @@
                 },
             },
         }
+        
+        
     </script>
     <style>
         .pb-safe {
@@ -62,13 +64,8 @@
             50% { box-shadow: 0 0 15px rgba(240, 153, 92, 0.8); }
         }
         
-        @keyframes progressFill {
-            from { width: 0%; }
-            to { width: var(--progress-width); }
-        }
-        
         body {
-            min-height: max(884px, 100dvh);
+            min-height: 100dvh;
         }
         
         /* تخصيص شريط التمرير */
@@ -103,6 +100,25 @@
             transform: translateY(-5px);
         }
         
+        /* إخفاء المحتوى غير النشط */
+        .page-content {
+            display: none;
+        }
+        
+        .page-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        /* تخصيص عناصر التنشيط في القائمة */
+        .nav-item.active {
+            color: #f0995c;
+        }
+        
+        .nav-item.active .nav-icon {
+            background-color: rgba(240, 153, 92, 0.1);
+        }
+        
         /* تأثير التحميل */
         .skeleton {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
@@ -120,6 +136,20 @@
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
+        
+        /* تخصيص القائمة */
+        .list-item {
+            transition: all 0.3s ease;
+            border-right: 4px solid transparent;
+        }
+        
+        .list-item:hover {
+            transform: translateX(-5px);
+            border-right-color: rgba(240, 153, 92, 0.3);
+        }
+    .fixed.inset-0 {
+  z-index: 9999 !important;
+}
     </style>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-[#111418] dark:text-white overflow-x-hidden selection:bg-primary selection:text-white">
@@ -131,7 +161,7 @@
             </button>
             
             <div class="flex flex-col items-center">
-                <h1 id="greeting" class="text-base font-bold leading-tight text-gray-900 dark:text-white">مرحباً أحمد</h1>
+                <h1 id="pageTitle" class="text-base font-bold leading-tight text-gray-900 dark:text-white"></h1>
                 <span id="currentDate" class="text-xs text-gray-500 dark:text-[#c8a992]/80 mt-1"></span>
             </div>
             
@@ -141,236 +171,547 @@
             </button>
         </header>
         
-        <!-- المحتوى الرئيسي -->
+        <!-- المحتوى الرئيسي (جميع الصفحات) -->
         <main class="flex-1 overflow-y-auto">
-            <!-- كارت العمر -->
-            <section class="px-4 pt-4 pb-2">
-                <div id="ageCard" class="relative cursor-pointer overflow-hidden rounded-2xl bg-gradient-to-br from-surface-light to-gray-50 dark:from-surface-dark dark:to-[#261c16] p-6 shadow-lg interactive-card ring-1 ring-gray-900/5 dark:ring-white/5">
-                    <div class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/5 blur-3xl"></div>
-                    <div class="absolute left-4 top-4 h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-primary">cake</span>
-                    </div>
-                    
-                    <div class="relative z-10 flex flex-col gap-6">
-                        <div class="flex items-end justify-between mt-2">
-                            <div class="flex flex-col items-center gap-1">
-                                <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#c8a992]/60">السنة الحالية</span>
-                                <span id="currentYear" class="text-3xl font-extrabold text-gray-900 dark:text-white">
-                                    2025
-                                </span>
-                            </div>
-                            
-                            <div class="mb-2 flex flex-1 flex-col items-center px-4">
-                                <span id="remainingDays" class="mb-2 text-xs font-bold text-primary">120 يوم متبقي</span>
-                                <div class="relative h-3 w-full rounded-full bg-gray-200 dark:bg-[#473324] overflow-hidden">
-                                    <div id="progressBar" class="absolute right-0 top-0 h-full rounded-full bg-gradient-to-r from-primary to-primary-dark shadow-[0_0_10px_rgba(240,153,92,0.4)]" style="width: 65%;"></div>
-                                    <div id="progressMarker" class="absolute top-1/2 -translate-y-1/2 bg-surface-light dark:bg-surface-dark rounded-full p-[2px] shadow-sm border-2 border-primary" style="left: 35%;">
-                                        <span class="material-symbols-outlined text-[10px] text-primary block rotate-180">arrow_forward</span>
+            <!-- ===============================
+               الصفحة الرئيسية
+            ================================ -->
+            <div id="homePage" class="page-content active">
+                <!-- كارت العمر -->
+                <section class="px-4 pt-4 pb-2">
+                    <div id="ageCard" class="relative cursor-pointer overflow-hidden rounded-2xl bg-gradient-to-br from-surface-light to-gray-50 dark:from-surface-dark dark:to-[#261c16] p-6 shadow-lg interactive-card ring-1 ring-gray-900/5 dark:ring-white/5">
+                        <div class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/5 blur-3xl"></div>
+                        <div class="absolute left-2 top-2 h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-primary">cake</span>
+                        </div>
+                        
+                        <div class="relative z-10 flex flex-col gap-6">
+                            <div class="flex items-end justify-between mt-2">
+                                <div class="flex flex-col items-center gap-1">
+                                    <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#c8a992]/60">السنة الحالية</span>
+                                    <span id="currentYear" class="text-3xl font-extrabold text-gray-900 dark:text-white">
+                                        2025
+                                    </span>
+                                </div>
+                                
+                                <div class="mb-2 flex flex-1 flex-col items-center px-4">
+                                    <span id="remainingDays" class="mb-2 text-xs font-bold text-primary">120 يوم متبقي</span>
+                                    <div class="relative h-3 w-full rounded-full bg-gray-200 dark:bg-[#473324] overflow-hidden">
+                                        <div id="progressBar" class="absolute right-0 top-0 h-full rounded-full bg-gradient-to-r from-primary to-primary-dark shadow-[0_0_10px_rgba(240,153,92,0.4)]" style="width: 65%;"></div>
+                                        <div id="progressMarker" class="absolute top-1/2 -translate-y-1/2 bg-surface-light dark:bg-surface-dark rounded-full p-[2px] shadow-sm border-2 border-primary" style="left: 35%;">
+                                            <span class="material-symbols-outlined text-[10px] text-primary block rotate-180">arrow_forward</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between w-full mt-1">
+                                        <span class="text-[10px] text-gray-400">بداية العام</span>
+                                        <span class="text-[10px] text-gray-400">نهاية العام</span>
                                     </div>
                                 </div>
-                                <div class="flex justify-between w-full mt-1">
-                                    <span class="text-[10px] text-gray-400">بداية العام</span>
-                                    <span class="text-[10px] text-gray-400">نهاية العام</span>
+                                
+                                <div class="flex flex-col items-center gap-1">
+                                    <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#c8a992]/60">العمر القادم</span>
+                                    <div class="flex items-baseline gap-1">
+                                        <span id="nextAge" class="text-3xl font-extrabold text-gray-900 dark:text-white">26</span>
+                                        <span class="text-xs font-bold text-gray-400 dark:text-gray-500">سنة</span>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="flex flex-col items-center gap-1">
-                                <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#c8a992]/60">العمر القادم</span>
-                                <div class="flex items-baseline gap-1">
-                                    <span id="nextAge" class="text-3xl font-extrabold text-gray-900 dark:text-white">26</span>
-                                    <span class="text-xs font-bold text-gray-400 dark:text-gray-500">سنة</span>
+                            <div class="flex items-center justify-center gap-2 rounded-xl bg-primary/10 py-3 dark:bg-[#473324]/50 border border-primary/20">
+                                <span class="material-symbols-outlined text-primary text-sm">celebration</span>
+                                <span class="text-sm font-medium text-gray-700 dark:text-[#c8a992]">عيد الميلاد: <span id="birthdayText" class="text-gray-900 dark:text-white font-bold">15 نوفمبر</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- آية واقتباس -->
+                <section class="px-4 pt-4 pb-2">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- كارت الآية -->
+                        <div class="rounded-2xl bg-white dark:bg-surface-dark p-6 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+                            <div class="flex flex-col items-center">
+                                <span class="material-symbols-outlined mb-2 text-3xl text-primary/20">menu_book</span>
+                                <p id="ayahText" class="font-display text-lg font-bold leading-relaxed text-gray-900 dark:text-white text-center">
+                                    "وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ"
+                                </p>
+                                <span id="ayahInfo" class="mt-2 text-xs font-medium text-gray-400 dark:text-gray-500">سورة النجم - ٣٩</span>
+                            </div>
+                            <div class="my-4 border-t border-gray-100 dark:border-white/5"></div>
+                            <div class="flex flex-col items-center">
+                                <p id="ayahTafsirText" class="text-sm font-medium leading-relaxed text-gray-600 dark:text-[#c8a992] text-center">
+                                    لكل إنسان جزاء سعيه وعمله، ولا يحمل وزر غيره
+                                </p>
+                                <div class="mt-3">
+                                    <button id="refreshAyah" class="text-xs font-medium text-primary hover:text-primary-dark transition-colors flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">refresh</span>
+                                        تغيير الآية
+                                    </button>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="flex items-center justify-center gap-2 rounded-xl bg-primary/10 py-3 dark:bg-[#473324]/50 border border-primary/20">
-                            <span class="material-symbols-outlined text-primary text-sm">celebration</span>
-                            <span class="text-sm font-medium text-gray-700 dark:text-[#c8a992]">عيد الميلاد: <span id="birthdayText" class="text-gray-900 dark:text-white font-bold">15 نوفمبر</span></span>
-                        </div>
-                        
-                        <!-- معلومات إضافية -->
-                        <div class="grid grid-cols-2 gap-3 text-center">
-                            <div class="rounded-lg bg-white/50 dark:bg-black/20 p-3">
-                                <span class="text-xs text-gray-500 dark:text-[#c8a992] block mb-1">الأيام المتبقية</span>
-                                <span id="daysLived" class="text-lg font-bold text-gray-900 dark:text-white">245</span>
+                        <!-- كارت الاقتباس -->
+                        <div class="rounded-2xl bg-white dark:bg-surface-dark p-6 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+                            <div class="flex flex-col items-center">
+                                <span class="material-symbols-outlined mb-2 text-3xl text-primary/20">format_quote</span>
+                                <p id="quoteText" class="font-display text-lg font-bold leading-relaxed text-gray-900 dark:text-white text-center">
+                                    "النجاح هو مجموع مجهودات صغيرة تتكرر يوماً بعد يوم."
+                                </p>
+                                <span id="quoteAuthor" class="mt-2 text-xs font-medium text-gray-400 dark:text-gray-500">روبرت كولير</span>
                             </div>
-                            <div class="rounded-lg bg-white/50 dark:bg-black/20 p-3">
-                                <span class="text-xs text-gray-500 dark:text-[#c8a992] block mb-1">النسبة المئوية</span>
-                                <span id="yearPercentage" class="text-lg font-bold text-gray-900 dark:text-white">67%</span>
+                            <div class="my-4 border-t border-gray-100 dark:border-white/5"></div>
+                            <div class="flex flex-col items-center">
+                                <p id="quoteSource" class="text-sm font-medium leading-relaxed text-gray-600 dark:text-[#c8a992] text-center">
+                                    كتاب "The Secret of the Ages"
+                                </p>
+                                <div class="mt-3">
+                                    <button id="refreshQuote" class="text-xs font-medium text-primary hover:text-primary-dark transition-colors flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">refresh</span>
+                                        تغيير الاقتباس
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-            
-            <!-- الكروت الإحصائية -->
-            <section class="px-4 pt-4">
-                <div class="mb-4 flex items-center justify-between">
-                    <h2 class="text-lg font-bold text-gray-900 dark:text-white">نظرة عامة</h2>
-                    <button id="viewAllBtn" class="text-xs font-bold text-primary hover:text-primary/80 transition-colors">عرض الكل</button>
-                </div>
+                </section>
+            <!-- النظرة العامة (أيقونات جنب بعض بدون شرائط تقدم) -->
+<section class="px-4 pt-4">
+  <div class="mb-4 flex items-center justify-between">
+    <h2 class="text-lg font-bold text-gray-900 dark:text-white">نظرة عامة</h2>
+    <button id="viewAllBtn" class="text-xs font-bold text-primary hover:text-primary/80 transition-colors">عرض الكل</button>
+  </div>
+  
+  <div class="grid grid-cols-3 gap-3">
+    <!-- كارت الملاحظات -->
+    <div class="group flex flex-col items-center justify-center rounded-2xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+      <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary dark:bg-primary/20 mb-2">
+        <span class="material-symbols-outlined text-2xl">description</span>
+      </div>
+      <div class="text-center">
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">12</p>
+        <p class="text-xs font-medium text-gray-500 dark:text-[#c8a992] mt-1">ملاحظات</p>
+      </div>
+    </div>
+    
+    <!-- كارت الأفكار -->
+    <div class="group flex flex-col items-center justify-center rounded-2xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+      <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary dark:bg-primary/20 mb-2">
+        <span class="material-symbols-outlined text-2xl">lightbulb</span>
+      </div>
+      <div class="text-center">
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">5</p>
+        <p class="text-xs font-medium text-gray-500 dark:text-[#c8a992] mt-1">أفكار</p>
+      </div>
+    </div>
+    
+    <!-- كارت المهام -->
+    <div class="group flex flex-col items-center justify-center rounded-2xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+      <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary dark:bg-primary/20 mb-2">
+        <span class="material-symbols-outlined text-2xl">task_alt</span>
+      </div>
+      <div class="text-center">
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">8</p>
+        <p class="text-xs font-medium text-gray-500 dark:text-[#c8a992] mt-1">مهام</p>
+      </div>
+    </div>
+    
+    <!-- كارت المسارات -->
+    <div class="group flex flex-col items-center justify-center rounded-2xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+      <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary dark:bg-primary/20 mb-2">
+        <span class="material-symbols-outlined text-2xl">route</span>
+      </div>
+      <div class="text-center">
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">4</p>
+        <p class="text-xs font-medium text-gray-500 dark:text-[#c8a992] mt-1">مسارات</p>
+      </div>
+    </div>
+    
+    <!-- كارت الجلسات -->
+    <div class="group flex flex-col items-center justify-center rounded-2xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+      <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary dark:bg-primary/20 mb-2">
+        <span class="material-symbols-outlined text-2xl">timer</span>
+      </div>
+      <div class="text-center">
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">24</p>
+        <p class="text-xs font-medium text-gray-500 dark:text-[#c8a992] mt-1">جلسات</p>
+      </div>
+    </div>
+    
+    <!-- كارت الإنتاجية -->
+    <div class="group flex flex-col items-center justify-center rounded-2xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+      <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary dark:bg-primary/20 mb-2">
+        <span class="material-symbols-outlined text-2xl">trending_up</span>
+      </div>
+      <div class="text-center">
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">76%</p>
+        <p class="text-xs font-medium text-gray-500 dark:text-[#c8a992] mt-1">إنتاجية</p>
+      </div>
+    </div>
+  </div>
+</section>
                 
-                <div class="grid grid-cols-2 gap-4">
-                    <!-- كارت الملاحظات -->
-                    <div class="group flex flex-col justify-between rounded-2xl bg-white dark:bg-surface-dark p-5 shadow-sm interactive-card ring-1 ring-gray-900/5 dark:ring-white/5">
-                        <div class="mb-4 flex items-start justify-between">
-                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-orange-600 dark:bg-[#473324] dark:text-primary">
-                                <span class="material-symbols-outlined">description</span>
+                <!-- إحصائيات الوقت (محدثة حسب الطلب) -->
+                <section class="px-4 pt-6 pb-6">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">إحصائيات الوقت المتبقي في السنة</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="rounded-xl bg-white dark:bg-surface-dark p-4 text-center shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+                            <span class="material-symbols-outlined text-primary block mb-2">schedule</span>
+                            <span class="text-2xl font-bold text-gray-900 dark:text-white" id="hoursLeftYear">--</span>
+                            <span class="text-xs text-gray-500 dark:text-[#c8a992] block mt-1">ساعة متبقية</span>
+                        </div>
+                        <div class="rounded-xl bg-white dark:bg-surface-dark p-4 text-center shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+                            <span class="material-symbols-outlined text-primary block mb-2">today</span>
+                            <span class="text-2xl font-bold text-gray-900 dark:text-white" id="daysLeftYear">--</span>
+                            <span class="text-xs text-gray-500 dark:text-[#c8a992] block mt-1">يوم متبقي</span>
+                        </div>
+                        <div class="rounded-xl bg-white dark:bg-surface-dark p-4 text-center shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+                            <span class="material-symbols-outlined text-primary block mb-2">date_range</span>
+                            <span class="text-2xl font-bold text-gray-900 dark:text-white" id="weeksLeftYear">--</span>
+                            <span class="text-xs text-gray-500 dark:text-[#c8a992] block mt-1">أسبوع كامل متبقي</span>
+                        </div>
+                        <div class="rounded-xl bg-white dark:bg-surface-dark p-4 text-center shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+                            <span class="material-symbols-outlined text-primary block mb-2">calendar_month</span>
+                            <span class="text-2xl font-bold text-gray-900 dark:text-white" id="monthsLeftYear">--</span>
+                            <span class="text-xs text-gray-500 dark:text-[#c8a992] block mt-1">شهر متبقي</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- ===============================
+               صفحة المهام
+            ================================ -->
+            <div id="tasksPage" class="page-content">
+                <section class="px-4 pt-4">
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">المهام</h2>
+                        <p class="text-sm text-gray-500 dark:text-[#c8a992]">إدارة المهام اليومية والأسبوعية</p>
+                    </div>
+                    
+                    <!-- إضافة مهمة جديدة -->
+                    <div class="mb-6 rounded-2xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
+                                <span class="material-symbols-outlined">add</span>
                             </div>
-                            <span class="material-symbols-outlined text-lg text-gray-300 transition-colors group-hover:text-primary dark:text-gray-600">arrow_outward</span>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">إضافة مهمة جديدة</h3>
                         </div>
-                        <div>
-                            <p class="text-3xl font-bold text-gray-900 dark:text-white">12</p>
-                            <p class="text-sm font-medium text-gray-500 dark:text-[#c8a992]">عدد الملاحظات</p>
-                        </div>
-                        <div class="mt-3 h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden">
-                            <div class="h-full rounded-full bg-orange-500" style="width: 80%"></div>
+                        
+                        <div class="space-y-3">
+                            <input type="text" id="taskTitle" placeholder="عنوان المهمة" class="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#261c16] px-4 py-3 text-sm text-gray-900 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"/>
+                            
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-500 dark:text-[#c8a992] mb-1">التاريخ</label>
+                                    <input type="date" id="taskDate" class="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#261c16] px-4 py-3 text-sm text-gray-900 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"/>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-500 dark:text-[#c8a992] mb-1">الأولوية</label>
+                                    <select id="taskPriority" class="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#261c16] px-4 py-3 text-sm text-gray-900 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all">
+                                        <option value="low">منخفضة</option>
+                                        <option value="medium" selected>متوسطة</option>
+                                        <option value="high">عالية</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <button id="addTaskBtn" class="w-full rounded-xl bg-primary py-3 text-sm font-bold text-white transition active:scale-95 hover:bg-primary-dark">
+                                إضافة المهمة
+                            </button>
                         </div>
                     </div>
                     
-                    <!-- كارت الأفكار -->
-                    <div class="group flex flex-col justify-between rounded-2xl bg-white dark:bg-surface-dark p-5 shadow-sm interactive-card ring-1 ring-gray-900/5 dark:ring-white/5">
-                        <div class="mb-4 flex items-start justify-between">
+                    <!-- قائمة المهام -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">المهام الحالية</h3>
+                            <div class="flex gap-2">
+                                <button class="text-xs font-medium text-primary hover:text-primary/80 transition-colors px-3 py-1 rounded-lg bg-primary/10">الكل</button>
+                                <button class="text-xs font-medium text-gray-500 hover:text-gray-700 dark:hover:text-[#c8a992] transition-colors px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5">غير مكتملة</button>
+                                <button class="text-xs font-medium text-gray-500 hover:text-gray-700 dark:hover:text-[#c8a992] transition-colors px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5">مكتملة</button>
+                            </div>
+                        </div>
+                        
+                        <div id="tasksList" class="space-y-3">
+                            <!-- المهام ستتم إضافتها ديناميكياً -->
+                            <div class="rounded-xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5 border-r-4 border-emerald-500">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-start gap-3">
+                                        <button class="task-check h-5 w-5 rounded-full border-2 border-emerald-500 flex items-center justify-center mt-0.5">
+                                            <span class="material-symbols-outlined text-emerald-500 text-sm">check</span>
+                                        </button>
+                                        <div>
+                                            <h4 class="font-bold text-gray-900 dark:text-white">إكمال تقرير المشروع</h4>
+                                            <p class="text-xs text-gray-500 dark:text-[#c8a992] mt-1">الأولوية: <span class="font-medium text-emerald-600">متوسطة</span></p>
+                                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">تاريخ التسليم: اليوم</p>
+                                        </div>
+                                    </div>
+                                    <button class="text-gray-400 hover:text-red-500 transition-colors">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="rounded-xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5 border-r-4 border-orange-500">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-start gap-3">
+                                        <button class="task-check h-5 w-5 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center mt-0.5"></button>
+                                        <div>
+                                            <h4 class="font-bold text-gray-900 dark:text-white">اجتماع فريق العمل</h4>
+                                            <p class="text-xs text-gray-500 dark:text-[#c8a992] mt-1">الأولوية: <span class="font-medium text-orange-600">عالية</span></p>
+                                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">تاريخ التسليم: غداً</p>
+                                        </div>
+                                    </div>
+                                    <button class="text-gray-400 hover:text-red-500 transition-colors">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- ===============================
+               صفحة الملاحظات
+            ================================ -->
+            <div id="notesPage" class="page-content">
+                <section class="px-4 pt-4">
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">الملاحظات</h2>
+                        <p class="text-sm text-gray-500 dark:text-[#c8a992]">سجل ملاحظاتك وأفكارك اليومية</p>
+                    </div>
+                    
+                    <!-- إضافة ملاحظة جديدة -->
+                    <div class="mb-6 rounded-2xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-orange-600 dark:bg-[#473324] dark:text-primary">
+                                <span class="material-symbols-outlined">edit</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">ملاحظة جديدة</h3>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <input type="text" id="noteTitle" placeholder="عنوان الملاحظة" class="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#261c16] px-4 py-3 text-sm text-gray-900 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"/>
+                            
+                            <textarea id="noteContent" placeholder="محتوى الملاحظة..." rows="3" class="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#261c16] px-4 py-3 text-sm text-gray-900 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all resize-none"></textarea>
+                            
+                            <div class="flex justify-between">
+                                <button id="saveNoteBtn" class="rounded-xl bg-primary px-4 py-2 text-sm font-bold text-white transition active:scale-95 hover:bg-primary-dark">
+                                    حفظ الملاحظة
+                                </button>
+                                <button id="clearNoteBtn" class="rounded-xl border border-gray-300 dark:border-white/10 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 transition active:scale-95 hover:bg-gray-50 dark:hover:bg-white/5">
+                                    مسح
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- قائمة الملاحظات -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">الملاحظات السابقة</h3>
+                            <div class="flex items-center gap-2">
+                                <button class="text-xs font-medium text-gray-500 hover:text-gray-700 dark:hover:text-[#c8a992] transition-colors">الأحدث</button>
+                                <button class="text-xs font-medium text-primary hover:text-primary/80 transition-colors">الأقدم</button>
+                            </div>
+                        </div>
+                        
+                        <div id="notesList" class="space-y-3">
+                            <!-- الملاحظات ستتم إضافتها ديناميكياً -->
+                            <div class="rounded-xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+                                <div class="flex items-start justify-between mb-2">
+                                    <h4 class="font-bold text-gray-900 dark:text-white">أفكار لتطوير التطبيق</h4>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500">منذ يومين</span>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-[#c8a992]">يمكن إضافة ميزة التقويم الشهري الكامل مع إمكانية إضافة أحداث ومهام محددة بالتواريخ.</p>
+                                <div class="mt-3 flex justify-end gap-2">
+                                    <button class="text-xs text-primary hover:text-primary-dark transition-colors">تعديل</button>
+                                    <button class="text-xs text-red-500 hover:text-red-600 transition-colors">حذف</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- ===============================
+               صفحة الأفكار
+            ================================ -->
+            <div id="ideasPage" class="page-content">
+                <section class="px-4 pt-4">
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">الأفكار</h2>
+                        <p class="text-sm text-gray-500 dark:text-[#c8a992]">سجل أفكارك الإبداعية والمشاريع المستقبلية</p>
+                    </div>
+                    
+                    <!-- إضافة فكرة جديدة -->
+                    <div class="mb-6 rounded-2xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+                        <div class="flex items-center gap-3 mb-4">
                             <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
                                 <span class="material-symbols-outlined">lightbulb</span>
                             </div>
-                            <span class="material-symbols-outlined text-lg text-gray-300 transition-colors group-hover:text-blue-500 dark:text-gray-600">arrow_outward</span>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">فكرة جديدة</h3>
                         </div>
-                        <div>
-                            <p class="text-3xl font-bold text-gray-900 dark:text-white">5</p>
-                            <p class="text-sm font-medium text-gray-500 dark:text-[#c8a992]">عدد الأفكار</p>
-                        </div>
-                        <div class="mt-3 h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden">
-                            <div class="h-full rounded-full bg-blue-500" style="width: 40%"></div>
+                        
+                        <div class="space-y-3">
+                            <input type="text" id="ideaTitle" placeholder="عنوان الفكرة" class="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#261c16] px-4 py-3 text-sm text-gray-900 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"/>
+                            
+                            <textarea id="ideaDescription" placeholder="وصف الفكرة..." rows="3" class="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#261c16] px-4 py-3 text-sm text-gray-900 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all resize-none"></textarea>
+                            
+                            <select id="ideaCategory" class="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#261c16] px-4 py-3 text-sm text-gray-900 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all">
+                                <option value="project">مشروع</option>
+                                <option value="improvement">تحسين</option>
+                                <option value="learning">تعلم</option>
+                                <option value="other">أخرى</option>
+                            </select>
+                            
+                            <button id="saveIdeaBtn" class="w-full rounded-xl bg-primary py-3 text-sm font-bold text-white transition active:scale-95 hover:bg-primary-dark">
+                                حفظ الفكرة
+                            </button>
                         </div>
                     </div>
                     
-                    <!-- كارت المهام -->
-                    <div class="group flex flex-col justify-between rounded-2xl bg-white dark:bg-surface-dark p-5 shadow-sm interactive-card ring-1 ring-gray-900/5 dark:ring-white/5">
-                        <div class="mb-4 flex items-start justify-between">
-                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
-                                <span class="material-symbols-outlined">task_alt</span>
+                    <!-- قائمة الأفكار -->
+                    <div>
+                        <div class="mb-4">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">أفكارك</h3>
+                            <p class="text-sm text-gray-500 dark:text-[#c8a992]">5 أفكار إجمالاً</p>
+                        </div>
+                        
+                        <div id="ideasList" class="space-y-3">
+                            <!-- الأفكار ستتم إضافتها ديناميكياً -->
+                            <div class="rounded-xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+                                <div class="flex items-start justify-between mb-2">
+                                    <div>
+                                        <h4 class="font-bold text-gray-900 dark:text-white">تطبيق لإدارة الوقت</h4>
+                                        <span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400 mt-1 inline-block">مشروع</span>
+                                    </div>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500">منذ أسبوع</span>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-[#c8a992] mt-2">تطبيق متكامل لإدارة الوقت والمهام مع إحصائيات وتقارير تفصيلية.</p>
                             </div>
-                            <span class="material-symbols-outlined text-lg text-gray-300 transition-colors group-hover:text-emerald-500 dark:text-gray-600">arrow_outward</span>
-                        </div>
-                        <div>
-                            <p class="text-3xl font-bold text-gray-900 dark:text-white">8</p>
-                            <p class="text-sm font-medium text-gray-500 dark:text-[#c8a992]">عدد المهام</p>
-                        </div>
-                        <div class="mt-3 h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden">
-                            <div class="h-full rounded-full bg-emerald-500" style="width: 60%"></div>
                         </div>
                     </div>
+                </section>
+            </div>
+            
+            <!-- ===============================
+               صفحة المسارات
+            ================================ -->
+            <div id="pathsPage" class="page-content">
+                <section class="px-4 pt-4">
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">المسارات</h2>
+                        <p class="text-sm text-gray-500 dark:text-[#c8a992]">مسار تعلمك وتطورك الشخصي والمهني</p>
+                    </div>
                     
-                    <!-- كارت المسارات -->
-                    <div class="group flex flex-col justify-between rounded-2xl bg-white dark:bg-surface-dark p-5 shadow-sm interactive-card ring-1 ring-gray-900/5 dark:ring-white/5">
-                        <div class="mb-4 flex items-start justify-between">
+                    <!-- إضافة مسار جديد -->
+                    <div class="mb-6 rounded-2xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+                        <div class="flex items-center gap-3 mb-4">
                             <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400">
                                 <span class="material-symbols-outlined">route</span>
                             </div>
-                            <span class="material-symbols-outlined text-lg text-gray-300 transition-colors group-hover:text-purple-500 dark:text-gray-600">arrow_outward</span>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">مسار جديد</h3>
                         </div>
-                        <div>
-                            <p class="text-3xl font-bold text-gray-900 dark:text-white">4</p>
-                            <p class="text-sm font-medium text-gray-500 dark:text-[#c8a992]">عدد المسارات</p>
-                        </div>
-                        <div class="mt-3 h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden">
-                            <div class="h-full rounded-full bg-purple-500" style="width: 30%"></div>
+                        
+                        <div class="space-y-3">
+                            <input type="text" id="pathName" placeholder="اسم المسار" class="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#261c16] px-4 py-3 text-sm text-gray-900 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"/>
+                            
+                            <textarea id="pathDescription" placeholder="وصف المسار والأهداف..." rows="3" class="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#261c16] px-4 py-3 text-sm text-gray-900 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all resize-none"></textarea>
+                            
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-500 dark:text-[#c8a992] mb-1">تاريخ البدء</label>
+                                    <input type="date" id="pathStartDate" class="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#261c16] px-4 py-3 text-sm text-gray-900 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"/>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-500 dark:text-[#c8a992] mb-1">تاريخ الانتهاء المتوقع</label>
+                                    <input type="date" id="pathEndDate" class="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#261c16] px-4 py-3 text-sm text-gray-900 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"/>
+                                </div>
+                            </div>
+                            
+                            <button id="savePathBtn" class="w-full rounded-xl bg-primary py-3 text-sm font-bold text-white transition active:scale-95 hover:bg-primary-dark">
+                                إضافة المسار
+                            </button>
                         </div>
                     </div>
                     
-                    <!-- كارت الجلسات -->
-                    <div class="group flex flex-col justify-between rounded-2xl bg-white dark:bg-surface-dark p-5 shadow-sm interactive-card ring-1 ring-gray-900/5 dark:ring-white/5 col-span-2">
-                        <div class="mb-4 flex items-start justify-between">
-                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F7B980]/15 text-[#b0743b] dark:bg-[#F7B980]/10 dark:text-[#F7B980]">
-                                <span class="material-symbols-outlined">timer</span>
+                    <!-- قائمة المسارات -->
+                    <div>
+                        <div class="mb-4">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">مساراتك</h3>
+                            <p class="text-sm text-gray-500 dark:text-[#c8a992]">4 مسارات إجمالاً</p>
+                        </div>
+                        
+                        <div id="pathsList" class="space-y-4">
+                            <!-- المسارات ستتم إضافتها ديناميكياً -->
+                            <div class="rounded-xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+                                <div class="flex items-start justify-between mb-3">
+                                    <h4 class="font-bold text-gray-900 dark:text-white">مسار تطوير الويب</h4>
+                                    <span class="text-xs px-2 py-1 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">جاري</span>
+                                </div>
+                                
+                                <p class="text-sm text-gray-600 dark:text-[#c8a992] mb-3">تعلم تطوير الويب الكامل من البداية إلى الاحتراف.</p>
+                                
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="text-gray-500 dark:text-[#c8a992]">التقدم</span>
+                                        <span class="font-bold text-primary">65%</span>
+                                    </div>
+                                    <div class="h-2 rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden">
+                                        <div class="h-full rounded-full bg-primary" style="width: 65%"></div>
+                                    </div>
+                                </div>
                             </div>
-                            <span class="material-symbols-outlined text-lg text-gray-300 transition-colors group-hover:text-[#F7B980] dark:text-gray-600">arrow_outward</span>
-                        </div>
-                        <div>
-                            <p class="text-3xl font-bold text-gray-900 dark:text-white">24</p>
-                            <p class="text-sm font-medium text-gray-500 dark:text-[#c8a992]">عدد جلسات الإنتاجية</p>
-                        </div>
-                        <div class="mt-3 h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden">
-                            <div class="h-full rounded-full bg-gradient-to-r from-[#F7B980] to-[#f0995c]" style="width: 90%"></div>
                         </div>
                     </div>
-                </div>
-            </section>
-            
-            <!-- آية واقتباس -->
-            <section class="px-4 pt-6 pb-4">
-                <div class="rounded-2xl bg-white dark:bg-surface-dark p-6 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
-                    <div class="flex flex-col items-center">
-                        <span class="material-symbols-outlined mb-2 text-3xl text-primary/20">format_quote</span>
-                        <p id="ayahText" class="font-display text-lg font-bold leading-relaxed text-gray-900 dark:text-white text-center">
-                            "وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ"
-                        </p>
-                        <span id="ayahInfo" class="mt-2 text-xs font-medium text-gray-400 dark:text-gray-500">سورة النجم - ٣٩</span>
-                    </div>
-                    <div class="my-4 border-t border-gray-100 dark:border-white/5"></div>
-                    <div class="flex flex-col items-center">
-                        <p id="quoteText" class="text-sm font-medium leading-relaxed text-gray-600 dark:text-[#c8a992] text-center">
-                            "النجاح هو مجموع مجهودات صغيرة تتكرر يوماً بعد يوم."
-                        </p>
-                        <div class="mt-3 flex gap-2">
-                            <button id="refreshAyah" class="text-xs font-medium text-primary hover:text-primary-dark transition-colors">تغيير الآية</button>
-                            <span class="text-gray-300">•</span>
-                            <button id="refreshQuote" class="text-xs font-medium text-primary hover:text-primary-dark transition-colors">تغيير الاقتباس</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- إحصائيات إضافية -->
-            <section class="px-4 pb-6">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">إحصائيات الوقت</h3>
-                <div class="grid grid-cols-3 gap-3">
-                    <div class="rounded-xl bg-white dark:bg-surface-dark p-4 text-center shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
-                        <span class="material-symbols-outlined text-primary block mb-2">today</span>
-                        <span class="text-2xl font-bold text-gray-900 dark:text-white" id="currentWeek">24</span>
-                        <span class="text-xs text-gray-500 dark:text-[#c8a992] block mt-1">الأسبوع الحالي</span>
-                    </div>
-                    <div class="rounded-xl bg-white dark:bg-surface-dark p-4 text-center shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
-                        <span class="material-symbols-outlined text-blue-500 block mb-2">date_range</span>
-                        <span class="text-2xl font-bold text-gray-900 dark:text-white" id="daysInYear">365</span>
-                        <span class="text-xs text-gray-500 dark:text-[#c8a992] block mt-1">يوم في السنة</span>
-                    </div>
-                    <div class="rounded-xl bg-white dark:bg-surface-dark p-4 text-center shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
-                        <span class="material-symbols-outlined text-emerald-500 block mb-2">schedule</span>
-                        <span class="text-2xl font-bold text-gray-900 dark:text-white" id="hoursLeft">8760</span>
-                        <span class="text-xs text-gray-500 dark:text-[#c8a992] block mt-1">ساعة متبقية</span>
-                    </div>
-                </div>
-            </section>
+                </section>
+            </div>
         </main>
         
-        <!-- القائمة السفلية -->
+        <!-- القائمة السفلية للتنقل -->
         <nav class="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-gray-200 bg-white/95 px-2 pb-safe pt-2 backdrop-blur-md dark:border-white/5 dark:bg-[#19120d]/95">
-            <a class="group flex flex-col items-center gap-1 p-2" href="#">
-                <div class="flex h-10 w-12 items-center justify-center rounded-full bg-primary/10 transition-colors group-hover:bg-primary/20 dark:bg-[#473324]">
+            <!-- الرئيسية -->
+            <button data-page="homePage" class="nav-item group flex flex-col items-center gap-1 p-2 active">
+                <div class="nav-icon flex h-10 w-12 items-center justify-center rounded-full bg-primary/10 transition-colors group-hover:bg-primary/20 dark:bg-[#473324]">
                     <span class="material-symbols-outlined text-2xl text-primary font-variation-fill">dashboard</span>
                 </div>
                 <span class="text-[10px] font-bold text-primary">الرئيسية</span>
-            </a>
-            <a class="group flex flex-col items-center gap-1 p-2" href="#">
-                <div class="flex h-10 w-12 items-center justify-center rounded-full transition-colors group-hover:bg-gray-100 dark:group-hover:bg-white/5">
+            </button>
+            
+            <!-- المهام -->
+            <button data-page="tasksPage" class="nav-item group flex flex-col items-center gap-1 p-2">
+                <div class="nav-icon flex h-10 w-12 items-center justify-center rounded-full transition-colors group-hover:bg-gray-100 dark:group-hover:bg-white/5">
                     <span class="material-symbols-outlined text-2xl text-gray-400 dark:text-[#c8a992]">task_alt</span>
                 </div>
                 <span class="text-[10px] font-medium text-gray-400 dark:text-[#c8a992]">المهام</span>
-            </a>
-            <a class="group flex flex-col items-center gap-1 p-2" href="#">
-                <div class="flex h-10 w-12 items-center justify-center rounded-full transition-colors group-hover:bg-gray-100 dark:group-hover:bg-white/5">
+            </button>
+            
+            <!-- الملاحظات -->
+            <button data-page="notesPage" class="nav-item group flex flex-col items-center gap-1 p-2">
+                <div class="nav-icon flex h-10 w-12 items-center justify-center rounded-full transition-colors group-hover:bg-gray-100 dark:group-hover:bg-white/5">
+                    <span class="material-symbols-outlined text-2xl text-gray-400 dark:text-[#c8a992]">description</span>
+                </div>
+                <span class="text-[10px] font-medium text-gray-400 dark:text-[#c8a992]">الملاحظات</span>
+            </button>
+            
+            <!-- الأفكار -->
+            <button data-page="ideasPage" class="nav-item group flex flex-col items-center gap-1 p-2">
+                <div class="nav-icon flex h-10 w-12 items-center justify-center rounded-full transition-colors group-hover:bg-gray-100 dark:group-hover:bg-white/5">
                     <span class="material-symbols-outlined text-2xl text-gray-400 dark:text-[#c8a992]">lightbulb</span>
                 </div>
                 <span class="text-[10px] font-medium text-gray-400 dark:text-[#c8a992]">الأفكار</span>
-            </a>
-            <a class="group flex flex-col items-center gap-1 p-2" href="#">
-                <div class="flex h-10 w-12 items-center justify-center rounded-full transition-colors group-hover:bg-gray-100 dark:group-hover:bg-white/5">
-                    <span class="material-symbols-outlined text-2xl text-gray-400 dark:text-[#c8a992]">deployed_code</span>
+            </button>
+            
+            <!-- المسارات -->
+            <button data-page="pathsPage" class="nav-item group flex flex-col items-center gap-1 p-2">
+                <div class="nav-icon flex h-10 w-12 items-center justify-center rounded-full transition-colors group-hover:bg-gray-100 dark:group-hover:bg-white/5">
+                    <span class="material-symbols-outlined text-2xl text-gray-400 dark:text-[#c8a992]">route</span>
                 </div>
-                <span class="text-[10px] font-medium text-gray-400 dark:text-[#c8a992]">وضع التصفح</span>
-            </a>
+                <span class="text-[10px] font-medium text-gray-400 dark:text-[#c8a992]">المسارات</span>
+            </button>
         </nav>
     </div>
 
@@ -381,7 +722,7 @@
         <div class="w-[90%] max-w-sm rounded-2xl bg-white dark:bg-surface-dark p-6 shadow-xl ring-1 ring-gray-900/5 dark:ring-white/5 animate-[fadeIn_0.25s_ease]">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white">
-                    تاريخ الميلاد 🎂
+                    تاريخ الميلاد
                 </h3>
                 <button onclick="closeBirthModal()" class="material-symbols-outlined text-gray-400 hover:text-primary transition-colors">
                     close
@@ -458,7 +799,41 @@
                 </div>
                 
                 <div>
+                    <h4 class="font-bold text-gray-900 dark:text-white mb-3">المعلومات الشخصية</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 dark:text-[#c8a992] mb-1">الاسم</label>
+                            <input type="text" id="userName" value="أحمد" class="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#261c16] px-4 py-3 text-sm text-gray-900 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"/>
+                        </div>
+                        <button onclick="openBirthModal()" class="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#261c16] px-4 py-3 text-sm text-gray-900 dark:text-white text-right transition hover:bg-gray-100 dark:hover:bg-white/5">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-900 dark:text-white">تاريخ الميلاد</span>
+                                <span class="text-gray-500 dark:text-[#c8a992]">15 نوفمبر</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-gray-900 dark:text-white mb-3">التحديثات</h4>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-3">
+                            <input type="checkbox" id="autoUpdate" class="rounded border-gray-300 text-primary focus:ring-primary" checked>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">التحديث التلقائي للآيات والاقتباسات</span>
+                        </label>
+                        <label class="flex items-center gap-3">
+                            <input type="checkbox" id="notificationsEnabled" class="rounded border-gray-300 text-primary focus:ring-primary" checked>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">تفعيل الإشعارات</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div>
                     <h4 class="font-bold text-gray-900 dark:text-white mb-3">البيانات</h4>
+                    <button onclick="exportData()" class="w-full rounded-lg border border-gray-300 dark:border-white/10 p-3 text-center text-gray-700 dark:text-gray-300 transition hover:bg-gray-50 dark:hover:bg-white/5 mb-2">
+                        <span class="material-symbols-outlined align-middle mr-2">download</span>
+                        تصدير البيانات
+                    </button>
                     <button onclick="clearAllData()" class="w-full rounded-lg border border-red-300 dark:border-red-500/30 p-3 text-center text-red-600 dark:text-red-400 transition hover:bg-red-50 dark:hover:bg-red-500/10">
                         <span class="material-symbols-outlined align-middle mr-2">delete</span>
                         حذف جميع البيانات
@@ -486,13 +861,38 @@
     const QUOTE_KEY = "current_quote";
     const NOTIFICATIONS_KEY = "user_notifications";
     const SETTINGS_KEY = "user_settings";
+    const TASKS_KEY = "user_tasks";
+    const NOTES_KEY = "user_notes";
+    const IDEAS_KEY = "user_ideas";
+    const PATHS_KEY = "user_paths";
+    const USER_NAME_KEY = "user_name";
     
     // الإعدادات الافتراضية
     const DEFAULT_SETTINGS = {
         theme: "dark",
         notifications: true,
-        autoRefresh: true
+        autoRefresh: true,
+        userName: "أحمد"
     };
+    
+    // قائمة الآيات الافتراضية
+    const DEFAULT_AYAHS = [
+        {
+            text: "وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ",
+            surah: "النجم",
+            number: 39,
+            tafsir: "لكل إنسان جزاء سعيه وعمله، ولا يحمل وزر غيره"
+        }
+    ];
+    
+    // قائمة الاقتباسات الافتراضية
+    const DEFAULT_QUOTES = [
+        {
+            content: "النجاح هو مجموع مجهودات صغيرة تتكرر يوماً بعد يوم.",
+            author: "روبرت كولير",
+            source: "كتاب 'The Secret of the Ages'"
+        }
+    ];
     
     /* ===============================
        تهيئة الصفحة
@@ -507,7 +907,7 @@
         // تحميل الإعدادات
         loadSettings();
         
-        // تعيين تحية مناسبة للوقت
+        // تعيين التحية حسب الوقت
         setGreetingByTime();
         
         // تحميل تاريخ الميلاد إذا موجود
@@ -516,7 +916,6 @@
             calculateAge(savedBirth);
             updateYearProgress(savedBirth);
         } else {
-            // إذا لم يكن هناك تاريخ ميلاد محفوظ، افتح النافذة المنبثقة
             setTimeout(() => {
                 openBirthModal();
             }, 1000);
@@ -528,8 +927,14 @@
         // تحميل الاقتباس
         loadQuote();
         
-        // تحديث إحصائيات الوقت
-        updateTimeStatistics();
+        // تحديث إحصائيات الوقت المتبقي في السنة
+        updateYearEndStatistics();
+        
+        // تحميل البيانات
+        loadTasks();
+        loadNotes();
+        loadIdeas();
+        loadPaths();
         
         // إعداد المستمعين للأحداث
         setupEventListeners();
@@ -537,6 +942,86 @@
         // إعداد الإشعارات الوهمية للعرض
         setupSampleNotifications();
     });
+    
+    /* ===============================
+       نظام التنقل بين الصفحات
+    ================================ */
+    function switchPage(pageId) {
+        // إخفاء جميع الصفحات
+        document.querySelectorAll('.page-content').forEach(page => {
+            page.classList.remove('active');
+        });
+        
+        // إظهار الصفحة المطلوبة
+        const targetPage = document.getElementById(pageId);
+        if (targetPage) {
+            targetPage.classList.add('active');
+            
+            // تحديث عنوان الصفحة
+            let pageTitle = "";
+            if (pageId === "homePage") {
+                pageTitle = getGreetingByTime();
+            } else {
+                const titles = {
+                    tasksPage: "المهام",
+                    notesPage: "الملاحظات",
+                    ideasPage: "الأفكار",
+                    pathsPage: "المسارات"
+                };
+                pageTitle = titles[pageId] || 'لوحة التحكم';
+            }
+            
+            document.getElementById('pageTitle').textContent = pageTitle;
+            
+            // تحديث حالة العناصر في القائمة
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                const icon = item.querySelector('.nav-icon');
+                const text = item.querySelector('span');
+                
+                if (item.dataset.page === pageId) {
+                    item.classList.add('active');
+                    icon.classList.add('bg-primary/10', 'dark:bg-[#473324]');
+                    icon.classList.remove('group-hover:bg-gray-100', 'dark:group-hover:bg-white/5');
+                    text.classList.add('text-primary', 'font-bold');
+                    text.classList.remove('text-gray-400', 'dark:text-[#c8a992]', 'font-medium');
+                    
+                    // تحديث الأيقونة
+                    const iconSpan = icon.querySelector('.material-symbols-outlined');
+                    iconSpan.style.fontVariationSettings = "'FILL' 1";
+                } else {
+                    icon.classList.remove('bg-primary/10', 'dark:bg-[#473324]');
+                    icon.classList.add('group-hover:bg-gray-100', 'dark:group-hover:bg-white/5');
+                    text.classList.remove('text-primary', 'font-bold');
+                    text.classList.add('text-gray-400', 'dark:text-[#c8a992]', 'font-medium');
+                    
+                    // إعادة الأيقونة إلى حالتها الأصلية
+                    const iconSpan = icon.querySelector('.material-symbols-outlined');
+                    iconSpan.style.fontVariationSettings = "'FILL' 0";
+                }
+            });
+        }
+    }
+    
+    /* ===============================
+       تعيين التحية حسب الوقت
+    ================================ */
+    function getGreetingByTime() {
+        const hour = new Date().getHours();
+        const userName = localStorage.getItem(USER_NAME_KEY) || "أحمد";
+        
+        if (hour < 12) {
+            return `صباح الخير ${userName}`;
+        } else if (hour < 18) {
+            return `مساء الخير ${userName}`;
+        } else {
+            return `مساء الخير ${userName}`;
+        }
+    }
+    
+    function setGreetingByTime() {
+        document.getElementById('pageTitle').textContent = getGreetingByTime();
+    }
     
     /* ===============================
        تعيين التاريخ والوقت الحالي
@@ -567,22 +1052,34 @@
     }
     
     /* ===============================
-       تعيين التحية حسب الوقت
+       حساب إحصائيات الوقت المتبقي في السنة
     ================================ */
-    function setGreetingByTime() {
-        const greetingEl = document.getElementById("greeting");
-        const hour = new Date().getHours();
-        let greeting = "مرحباً أحمد";
+    function updateYearEndStatistics() {
+        const now = new Date();
+        const currentYear = now.getFullYear();
         
-        if (hour < 12) {
-            greeting = "صباح الخير أحمد 🌅";
-        } else if (hour < 18) {
-            greeting = "مساء الخير أحمد ☀️";
-        } else {
-            greeting = "مساء الخير أحمد 🌙";
-        }
+        // نهاية السنة الميلادية (31 ديسمبر الساعة 23:59:59)
+        const yearEnd = new Date(currentYear, 11, 31, 23, 59, 59);
         
-        greetingEl.textContent = greeting;
+        // حساب الوقت المتبقي بالملي ثانية
+        const timeLeftMs = yearEnd - now;
+        
+        // تحويل الوقت المتبقي إلى وحدات مختلفة
+        const hoursLeft = Math.floor(timeLeftMs / (1000 * 60 * 60));
+        const daysLeft = Math.floor(timeLeftMs / (1000 * 60 * 60 * 24));
+        const weeksLeft = Math.floor(daysLeft / 7);
+        
+        // حساب الشهور المتبقية
+        const monthsLeft = 12 - now.getMonth() - 1;
+        
+        // تحديث الواجهة
+        document.getElementById("hoursLeftYear").textContent = hoursLeft.toLocaleString();
+        document.getElementById("daysLeftYear").textContent = daysLeft.toLocaleString();
+        document.getElementById("weeksLeftYear").textContent = weeksLeft.toLocaleString();
+        document.getElementById("monthsLeftYear").textContent = monthsLeft.toLocaleString();
+        
+        // إرجاع القيم لحسابات أخرى
+        return { hoursLeft, daysLeft, weeksLeft, monthsLeft };
     }
     
     /* ===============================
@@ -592,15 +1089,13 @@
         const stored = localStorage.getItem(BIRTH_KEY);
         const input = document.getElementById("birthInput");
         
-        // تعيين القيمة الافتراضية لتاريخ الميلاد (15 نوفمبر 1999)
         if (!stored) {
-            const defaultDate = new Date(2000, 9, 29); // شهر 10 هو نوفمبر (0-indexed)
+            const defaultDate = new Date(1999, 10, 15);
             input.value = defaultDate.toISOString().split('T')[0];
         } else {
             input.value = stored;
         }
         
-        // تعيين الحد الأقصى لتاريخ اليوم
         const today = new Date();
         input.max = today.toISOString().split('T')[0];
         
@@ -625,7 +1120,6 @@
         updateYearProgress(input.value);
         closeBirthModal();
         
-        // إظهار رسالة نجاح
         showNotification("تم حفظ تاريخ الميلاد بنجاح", "success");
     }
     
@@ -636,7 +1130,6 @@
         const now = new Date();
         const birth = new Date(birthDate);
         
-        // حساب العمر الحالي
         let age = now.getFullYear() - birth.getFullYear();
         const monthDiff = now.getMonth() - birth.getMonth();
         
@@ -644,7 +1137,6 @@
             age--;
         }
         
-        // حساب تاريخ الميلاد القادم
         let nextBirthday = new Date(
             now.getFullYear(),
             birth.getMonth(),
@@ -655,31 +1147,16 @@
             nextBirthday.setFullYear(now.getFullYear() + 1);
         }
         
-        // حساب الأيام المتبقية
         const diffTime = nextBirthday - now;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         
-        // تحديث الواجهة
         document.getElementById("remainingDays").textContent = `${diffDays} يوم متبقي`;
         document.getElementById("nextAge").textContent = age + 1;
         
-        // تحديث تاريخ الميلاد في الواجهة
         const monthNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
                           "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
         document.getElementById("birthdayText").textContent = 
             `${birth.getDate()} ${monthNames[birth.getMonth()]}`;
-        
-        // حساب الأيام التي عشتها هذا العام
-        const startOfYear = new Date(now.getFullYear(), 0, 1);
-        const daysLived = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
-        document.getElementById("daysLived").textContent = daysLived;
-        
-        // حساب النسبة المئوية من السنة
-        const isLeapYear = (now.getFullYear() % 4 === 0 && now.getFullYear() % 100 !== 0) || 
-                          (now.getFullYear() % 400 === 0);
-        const daysInYear = isLeapYear ? 366 : 365;
-        const percentage = Math.round((daysLived / daysInYear) * 100);
-        document.getElementById("yearPercentage").textContent = `${percentage}%`;
         
         return { age, diffDays, nextBirthday };
     }
@@ -689,47 +1166,39 @@
     ================================ */
     function updateYearProgress(birthDate) {
         const now = new Date();
-        const startOfYear = new Date(now.getFullYear(), 0, 1);
-        const endOfYear = new Date(now.getFullYear(), 11, 31);
+        const birth = new Date(birthDate);
         
-        const totalYearTime = endOfYear - startOfYear;
-        const elapsedTime = now - startOfYear;
+        let lastBirthday = new Date(
+            now.getFullYear(),
+            birth.getMonth(),
+            birth.getDate()
+        );
         
-        const progressPercentage = (elapsedTime / totalYearTime) * 100;
+        if (lastBirthday > now) {
+            lastBirthday.setFullYear(lastBirthday.getFullYear() - 1);
+        }
         
-        // تحديث شريط التقدم
+        let nextBirthday = new Date(
+            lastBirthday.getFullYear() + 1,
+            birth.getMonth(),
+            birth.getDate()
+        );
+        
+        const totalPeriod = nextBirthday - lastBirthday;
+        const elapsed = now - lastBirthday;
+        
+        const progressPercentage = Math.min(
+            100,
+            Math.max(0, (elapsed / totalPeriod) * 100)
+        );
+        
         const progressBar = document.getElementById("progressBar");
         const progressMarker = document.getElementById("progressMarker");
         
-        progressBar.style.width = `${progressPercentage}%`;
-        progressMarker.style.left = `${100 - progressPercentage}%`;
-        
-        // إضافة تأثير تحريك
-        progressBar.style.animation = "progressFill 1s ease-out";
-        progressBar.style.setProperty("--progress-width", `${progressPercentage}%`);
-    }
-    
-    /* ===============================
-       تحديث إحصائيات الوقت
-    ================================ */
-    function updateTimeStatistics() {
-        const now = new Date();
-        
-        // حساب الأسبوع الحالي
-        const startOfYear = new Date(now.getFullYear(), 0, 1);
-        const days = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24));
-        const weekNumber = Math.ceil((days + startOfYear.getDay() + 1) / 7);
-        document.getElementById("currentWeek").textContent = weekNumber;
-        
-        // حساب عدد الأيام في السنة
-        const isLeapYear = (now.getFullYear() % 4 === 0 && now.getFullYear() % 100 !== 0) || 
-                          (now.getFullYear() % 400 === 0);
-        document.getElementById("daysInYear").textContent = isLeapYear ? 366 : 365;
-        
-        // حساب الساعات المتبقية في السنة
-        const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
-        const hoursLeft = Math.ceil((endOfYear - now) / (1000 * 60 * 60));
-        document.getElementById("hoursLeft").textContent = hoursLeft.toLocaleString();
+        if (progressBar && progressMarker) {
+            progressBar.style.width = `${progressPercentage}%`;
+            progressMarker.style.left = `${100 - progressPercentage}%`;
+        }
     }
     
     /* ===============================
@@ -740,58 +1209,60 @@
         const savedDate = localStorage.getItem(AYAH_DATE_KEY);
         const savedAyah = localStorage.getItem(AYAH_KEY);
         
-        // إذا كان اليوم هو نفس اليوم المحفوظ ولا نريد التحديث القسري
         if (savedDate === today && savedAyah && !forceRefresh) {
             const ayah = JSON.parse(savedAyah);
             renderAyah(ayah);
             return;
         }
         
-        // إظهار حالة التحميل
-        document.getElementById("ayahText").innerHTML = 
-            `<span class="skeleton block h-6 w-full rounded"></span>`;
-        document.getElementById("ayahInfo").innerHTML = 
-            `<span class="skeleton block h-4 w-24 rounded"></span>`;
-        
         try {
-            // جلب آية عشوائية
             const res = await fetch("https://api.alquran.cloud/v1/ayah/random");
             const data = await res.json();
             
             if (data.code === 200 && data.data) {
+                let tafsir = "تفسير الآية";
+                try {
+                    const tafsirRes = await fetch(`https://api.alquran.cloud/v1/ayah/${data.data.surah.number}:${data.data.numberInSurah}/ar.muyassar`);
+                    const tafsirData = await tafsirRes.json();
+                    if (tafsirData.data && tafsirData.data.text) {
+                        tafsir = tafsirData.data.text;
+                    }
+                } catch (tafsirError) {
+                    console.log("فشل تحميل التفسير:", tafsirError);
+                }
+                
                 const ayahData = {
                     text: data.data.text,
                     surah: data.data.surah.name,
                     number: data.data.numberInSurah,
-                    surahNumber: data.data.surah.number
+                    tafsir: tafsir
                 };
                 
                 localStorage.setItem(AYAH_KEY, JSON.stringify(ayahData));
                 localStorage.setItem(AYAH_DATE_KEY, today);
-                
                 renderAyah(ayahData);
                 
                 if (forceRefresh) {
                     showNotification("تم تحديث الآية بنجاح", "success");
                 }
+            } else {
+                throw new Error("فشل تحميل الآية من API");
             }
         } catch (error) {
-            console.log("فشل تحميل الآية:", error);
-            // استخدام آية افتراضية في حالة الفشل
-            const defaultAyah = {
-                text: "وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ",
-                surah: "النجم",
-                number: 39,
-                surahNumber: 53
-            };
-            renderAyah(defaultAyah);
+            console.log("فشل تحميل الآية من API، استخدام الآيات المحلية:", error);
+            const randomIndex = Math.floor(Math.random() * DEFAULT_AYAHS.length);
+            const ayahData = DEFAULT_AYAHS[randomIndex];
+            
+            localStorage.setItem(AYAH_KEY, JSON.stringify(ayahData));
+            localStorage.setItem(AYAH_DATE_KEY, today);
+            renderAyah(ayahData);
         }
     }
     
     function renderAyah(ayah) {
         document.getElementById("ayahText").textContent = `"${ayah.text}"`;
-        document.getElementById("ayahInfo").textContent = 
-            `${ayah.surah} - ${ayah.number}`;
+        document.getElementById("ayahInfo").textContent = `${ayah.surah} - ${ayah.number}`;
+        document.getElementById("ayahTafsirText").textContent = ayah.tafsir;
     }
     
     /* ===============================
@@ -800,26 +1271,21 @@
     async function loadQuote(forceRefresh = false) {
         const savedQuote = localStorage.getItem(QUOTE_KEY);
         
-        // إذا كان هناك اقتباس محفوظ ولا نريد التحديث القسري
         if (savedQuote && !forceRefresh) {
             const quote = JSON.parse(savedQuote);
             renderQuote(quote);
             return;
         }
         
-        // إظهار حالة التحميل
-        document.getElementById("quoteText").innerHTML = 
-            `<span class="skeleton block h-5 w-full rounded"></span>`;
-        
         try {
-            // جلب اقتباس عشوائي
-            const res = await fetch("https://api.quotable.io/random");
+            const res = await fetch("https://api.quotable.io/random?maxLength=100");
             const data = await res.json();
             
             if (data) {
                 const quoteData = {
                     content: data.content,
-                    author: data.author
+                    author: data.author,
+                    source: "Quotable API"
                 };
                 
                 localStorage.setItem(QUOTE_KEY, JSON.stringify(quoteData));
@@ -828,20 +1294,362 @@
                 if (forceRefresh) {
                     showNotification("تم تحديث الاقتباس بنجاح", "success");
                 }
+            } else {
+                throw new Error("فشل تحميل الاقتباس من API");
             }
         } catch (error) {
-            console.log("فشل تحميل الاقتباس:", error);
-            // استخدام اقتباس افتراضي في حالة الفشل
-            const defaultQuote = {
-                content: "النجاح هو مجموع مجهودات صغيرة تتكرر يوماً بعد يوم.",
-                author: "روبرت كولير"
-            };
-            renderQuote(defaultQuote);
+            console.log("فشل تحميل الاقتباس من API، استخدام الاقتباسات المحلية:", error);
+            const randomIndex = Math.floor(Math.random() * DEFAULT_QUOTES.length);
+            const quoteData = DEFAULT_QUOTES[randomIndex];
+            
+            localStorage.setItem(QUOTE_KEY, JSON.stringify(quoteData));
+            renderQuote(quoteData);
         }
     }
     
     function renderQuote(quote) {
         document.getElementById("quoteText").textContent = `"${quote.content}"`;
+        document.getElementById("quoteAuthor").textContent = quote.author;
+        document.getElementById("quoteSource").textContent = quote.source;
+    }
+    
+    /* ===============================
+       إدارة المهام
+    ================================ */
+    
+    function loadTasks() {
+        const savedTasks = localStorage.getItem(TASKS_KEY);
+        const tasks = savedTasks ? JSON.parse(savedTasks) : [
+            {
+                id: 1,
+                title: "إكمال تقرير المشروع",
+                date: new Date().toISOString().split('T')[0],
+                priority: "medium",
+                completed: true
+            },
+            {
+                id: 2,
+                title: "اجتماع فريق العمل",
+                date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+                priority: "high",
+                completed: false
+            }
+        ];
+        
+        renderTasks(tasks);
+        return tasks;
+    }
+    
+    function renderTasks(tasks) {
+        const container = document.getElementById("tasksList");
+        if (!container) return;
+        
+        container.innerHTML = tasks.map(task => `
+            <div class="rounded-xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5 border-r-4 ${task.completed ? 'border-emerald-500' : task.priority === 'high' ? 'border-orange-500' : task.priority === 'medium' ? 'border-yellow-500' : 'border-gray-300'}">
+                <div class="flex items-start justify-between">
+                    <div class="flex items-start gap-3">
+                        <button onclick="toggleTask(${task.id})" class="task-check h-5 w-5 rounded-full border-2 ${task.completed ? 'border-emerald-500 bg-emerald-500' : 'border-gray-300 dark:border-gray-600'} flex items-center justify-center mt-0.5">
+                            ${task.completed ? '<span class="material-symbols-outlined text-white text-sm">check</span>' : ''}
+                        </button>
+                        <div>
+                            <h4 class="font-bold text-gray-900 dark:text-white ${task.completed ? 'line-through text-gray-400' : ''}">${task.title}</h4>
+                            <p class="text-xs text-gray-500 dark:text-[#c8a992] mt-1">الأولوية: 
+                                <span class="font-medium ${task.priority === 'high' ? 'text-orange-600' : task.priority === 'medium' ? 'text-yellow-600' : 'text-emerald-600'}">
+                                    ${task.priority === 'high' ? 'عالية' : task.priority === 'medium' ? 'متوسطة' : 'منخفضة'}
+                                </span>
+                            </p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">تاريخ التسليم: ${formatDate(task.date)}</p>
+                        </div>
+                    </div>
+                    <button onclick="deleteTask(${task.id})" class="text-gray-400 hover:text-red-500 transition-colors">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+    /* ===============================
+   إدارة الأفكار
+=============================== */
+
+function loadIdeas() {
+    const savedIdeas = localStorage.getItem(IDEAS_KEY);
+    const ideas = savedIdeas ? JSON.parse(savedIdeas) : [
+        {
+            id: Date.now(),
+            title: "تطبيق لإدارة الوقت",
+            description: "تطبيق يساعد على تنظيم المهام وتتبع الإنتاجية",
+            category: "project",
+            createdAt: new Date().toISOString()
+        }
+    ];
+
+    renderIdeas(ideas);
+    localStorage.setItem(IDEAS_KEY, JSON.stringify(ideas));
+    return ideas;
+}
+
+function renderIdeas(ideas) {
+    const container = document.getElementById("ideasList");
+    if (!container) return;
+
+    if (ideas.length === 0) {
+        container.innerHTML = `
+            <div class="text-center text-sm text-gray-500 dark:text-[#c8a992]">
+                لا توجد أفكار بعد
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = ideas.map(idea => `
+        <div class="rounded-xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+            <div class="flex items-start justify-between mb-2">
+                <div>
+                    <h4 class="font-bold text-gray-900 dark:text-white">
+                        ${idea.title}
+                    </h4>
+                    <span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400 mt-1 inline-block">
+                        ${formatIdeaCategory(idea.category)}
+                    </span>
+                </div>
+                <span class="text-xs text-gray-400 dark:text-gray-500">
+                    ${formatDate(idea.createdAt)}
+                </span>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-[#c8a992] mt-2">
+                ${idea.description}
+            </p>
+        </div>
+    `).join("");
+}
+
+function formatIdeaCategory(category) {
+    const map = {
+        project: "مشروع",
+        improvement: "تحسين",
+        learning: "تعلم",
+        other: "أخرى"
+    };
+    return map[category] || category;
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("ar-EG");
+}
+/* ===============================
+   إدارة المسارات (Paths)
+=============================== */
+
+function loadPaths() {
+    const savedPaths = localStorage.getItem(PATHS_KEY);
+    const paths = savedPaths ? JSON.parse(savedPaths) : [
+        {
+            id: Date.now(),
+            name: "مسار تطوير الويب",
+            description: "تعلم تطوير الويب من الصفر حتى الاحتراف",
+            startDate: "2025-01-01",
+            endDate: "2025-12-31",
+            progress: 65,
+            status: "active",
+            createdAt: new Date().toISOString()
+        }
+    ];
+
+    renderPaths(paths);
+    localStorage.setItem(PATHS_KEY, JSON.stringify(paths));
+    return paths;
+}
+
+function renderPaths(paths) {
+    const container = document.getElementById("pathsList");
+    if (!container) return;
+
+    if (paths.length === 0) {
+        container.innerHTML = `
+            <div class="text-center text-sm text-gray-500 dark:text-[#c8a992]">
+                لا توجد مسارات بعد
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = paths.map(path => `
+        <div class="rounded-xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+            <div class="flex items-start justify-between mb-3">
+                <h4 class="font-bold text-gray-900 dark:text-white">
+                    ${path.name}
+                </h4>
+                <span class="text-xs px-2 py-1 rounded-full ${path.status === 'active'
+                    ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400'
+                    : 'bg-gray-100 text-gray-600'}">
+                    ${formatPathStatus(path.status)}
+                </span>
+            </div>
+
+            <p class="text-sm text-gray-600 dark:text-[#c8a992] mb-3">
+                ${path.description}
+            </p>
+
+            <div class="space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                    <span class="text-gray-500 dark:text-[#c8a992]">التقدم</span>
+                    <span class="font-bold text-primary">${path.progress}%</span>
+                </div>
+                <div class="h-2 rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden">
+                    <div class="h-full rounded-full bg-primary" style="width: ${path.progress}%"></div>
+                </div>
+            </div>
+        </div>
+    `).join("");
+}
+
+function formatPathStatus(status) {
+    const map = {
+        active: "جاري",
+        completed: "مكتمل",
+        paused: "متوقف"
+    };
+    return map[status] || status;
+}
+    
+    function addTask() {
+        const title = document.getElementById("taskTitle").value;
+        const date = document.getElementById("taskDate").value;
+        const priority = document.getElementById("taskPriority").value;
+        
+        if (!title.trim()) {
+            alert("الرجاء إدخال عنوان المهمة");
+            return;
+        }
+        
+        const tasks = loadTasks();
+        const newTask = {
+            id: Date.now(),
+            title,
+            date: date || new Date().toISOString().split('T')[0],
+            priority,
+            completed: false
+        };
+        
+        tasks.push(newTask);
+        localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+        
+        renderTasks(tasks);
+        
+        // إعادة تعيين الحقول
+        document.getElementById("taskTitle").value = '';
+        document.getElementById("taskDate").value = '';
+        document.getElementById("taskPriority").value = 'medium';
+        
+        showNotification("تمت إضافة المهمة بنجاح", "success");
+    }
+    
+    function toggleTask(taskId) {
+        const tasks = loadTasks();
+        const taskIndex = tasks.findIndex(t => t.id === taskId);
+        
+        if (taskIndex !== -1) {
+            tasks[taskIndex].completed = !tasks[taskIndex].completed;
+            localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+            renderTasks(tasks);
+            
+            showNotification(`تم ${tasks[taskIndex].completed ? 'إكمال' : 'إلغاء إكمال'} المهمة`, "success");
+        }
+    }
+    
+    function deleteTask(taskId) {
+        if (confirm("هل تريد حذف هذه المهمة؟")) {
+            const tasks = loadTasks();
+            const filteredTasks = tasks.filter(t => t.id !== taskId);
+            localStorage.setItem(TASKS_KEY, JSON.stringify(filteredTasks));
+            renderTasks(filteredTasks);
+            
+            showNotification("تم حذف المهمة بنجاح", "success");
+        }
+    }
+    
+    /* ===============================
+       إدارة الملاحظات
+    ================================ */
+    function loadNotes() {
+        const savedNotes = localStorage.getItem(NOTES_KEY);
+        const notes = savedNotes ? JSON.parse(savedNotes) : [
+            {
+                id: 1,
+                title: "أفكار لتطوير التطبيق",
+                content: "يمكن إضافة ميزة التقويم الشهري الكامل مع إمكانية إضافة أحداث ومهام محددة بالتواريخ.",
+                date: new Date(Date.now() - 172800000).toISOString()
+            }
+        ];
+        
+        renderNotes(notes);
+        return notes;
+    }
+    
+    function renderNotes(notes) {
+        const container = document.getElementById("notesList");
+        if (!container) return;
+        
+        container.innerHTML = notes.map(note => `
+            <div class="rounded-xl bg-white dark:bg-surface-dark p-4 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/5">
+                <div class="flex items-start justify-between mb-2">
+                    <h4 class="font-bold text-gray-900 dark:text-white">${note.title}</h4>
+                    <span class="text-xs text-gray-400 dark:text-gray-500">${formatRelativeTime(note.date)}</span>
+                </div>
+                <p class="text-sm text-gray-600 dark:text-[#c8a992]">${note.content}</p>
+                <div class="mt-3 flex justify-end gap-2">
+                    <button onclick="editNote(${note.id})" class="text-xs text-primary hover:text-primary-dark transition-colors">تعديل</button>
+                    <button onclick="deleteNote(${note.id})" class="text-xs text-red-500 hover:text-red-600 transition-colors">حذف</button>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    function addNote() {
+        const title = document.getElementById("noteTitle").value;
+        const content = document.getElementById("noteContent").value;
+        
+        if (!title.trim() || !content.trim()) {
+            alert("الرجاء إدخال عنوان ومحتوى الملاحظة");
+            return;
+        }
+        
+        const notes = loadNotes();
+        const newNote = {
+            id: Date.now(),
+            title,
+            content,
+            date: new Date().toISOString()
+        };
+        
+        notes.unshift(newNote);
+        localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+        
+        renderNotes(notes);
+        
+        // إعادة تعيين الحقول
+        document.getElementById("noteTitle").value = '';
+        document.getElementById("noteContent").value = '';
+        
+        showNotification("تمت إضافة الملاحظة بنجاح", "success");
+    }
+    
+    function clearNoteForm() {
+        document.getElementById("noteTitle").value = '';
+        document.getElementById("noteContent").value = '';
+    }
+    
+    function deleteNote(noteId) {
+        if (confirm("هل تريد حذف هذه الملاحظة؟")) {
+            const notes = loadNotes();
+            const filteredNotes = notes.filter(n => n.id !== noteId);
+            localStorage.setItem(NOTES_KEY, JSON.stringify(filteredNotes));
+            renderNotes(filteredNotes);
+            
+            showNotification("تم حذف الملاحظة بنجاح", "success");
+        }
     }
     
     /* ===============================
@@ -893,7 +1701,6 @@
     }
     
     function showNotification(message, type = "info") {
-        // إنشاء عنصر الإشعار
         const notification = document.createElement("div");
         notification.className = `fixed top-4 left-4 right-4 z-50 rounded-xl p-4 shadow-lg animate-[slideUp_0.3s_ease] ${
             type === "success" ? "bg-emerald-500 text-white" :
@@ -918,7 +1725,6 @@
         
         document.body.appendChild(notification);
         
-        // إزالة الإشعار تلقائياً بعد 3 ثوان
         setTimeout(() => {
             if (notification.parentNode) {
                 notification.remove();
@@ -944,6 +1750,9 @@
             document.getElementById("darkModeBtn").classList.remove("bg-primary/10", "border-primary");
         }
         
+        // تعيين اسم المستخدم
+        document.getElementById("userName").value = settings.userName || "أحمد";
+        
         return settings;
     }
     
@@ -956,11 +1765,33 @@
             localStorage.clear();
             showNotification("تم حذف جميع البيانات بنجاح", "success");
             
-            // إعادة تحميل الصفحة
             setTimeout(() => {
                 location.reload();
             }, 1500);
         }
+    }
+    
+    function exportData() {
+        const allData = {
+            settings: localStorage.getItem(SETTINGS_KEY),
+            tasks: localStorage.getItem(TASKS_KEY),
+            notes: localStorage.getItem(NOTES_KEY),
+            ideas: localStorage.getItem(IDEAS_KEY),
+            paths: localStorage.getItem(PATHS_KEY),
+            birthDate: localStorage.getItem(BIRTH_KEY)
+        };
+        
+        const dataStr = JSON.stringify(allData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        
+        const exportFileDefaultName = 'personal-dashboard-backup.json';
+        
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+        
+        showNotification("تم تصدير البيانات بنجاح", "success");
     }
     
     /* ===============================
@@ -971,7 +1802,6 @@
         modal.classList.remove("hidden");
         modal.classList.add("flex");
         
-        // تحديث قائمة الإشعارات
         updateNotificationsList();
     }
     
@@ -1028,27 +1858,83 @@
     }
     
     /* ===============================
+       دوال مساعدة
+    ================================ */
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        
+        if (date.toDateString() === today.toDateString()) {
+            return "اليوم";
+        } else if (date.toDateString() === tomorrow.toDateString()) {
+            return "غداً";
+        } else {
+            return date.toLocaleDateString('ar-SA');
+        }
+    }
+    
+    function formatRelativeTime(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+        
+        if (diffMins < 1) {
+            return "الآن";
+        } else if (diffMins < 60) {
+            return `منذ ${diffMins} دقيقة`;
+        } else if (diffHours < 24) {
+            return `منذ ${diffHours} ساعة`;
+        } else if (diffDays === 1) {
+            return "منذ يوم";
+        } else if (diffDays < 7) {
+            return `منذ ${diffDays} أيام`;
+        } else if (diffDays < 30) {
+            const weeks = Math.floor(diffDays / 7);
+            return `منذ ${weeks} أسبوع`;
+        } else {
+            return date.toLocaleDateString('ar-SA');
+        }
+    }
+    
+    /* ===============================
        إعداد مستمعي الأحداث
     ================================ */
     function setupEventListeners() {
-        // كارت العمر
-        document.getElementById("ageCard").addEventListener("click", openBirthModal);
-        
-        // أزرار التحديث
-        document.getElementById("refreshAyah").addEventListener("click", () => loadDailyAyah(true));
-        document.getElementById("refreshQuote").addEventListener("click", () => loadQuote(true));
-        
-        // أزرار الإشعارات والإعدادات
-        document.getElementById("notificationsBtn").addEventListener("click", openNotificationsModal);
-        document.getElementById("settingsBtn").addEventListener("click", openSettingsModal);
-        
-        // أزرار عرض الكل
-        document.getElementById("viewAllBtn").addEventListener("click", () => {
-            showNotification("سيتم عرض جميع العناصر قريباً", "info");
+        // التنقل بين الصفحات
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const pageId = item.dataset.page;
+                if (pageId) {
+                    switchPage(pageId);
+                }
+            });
         });
         
+        // كارت العمر
+        document.getElementById("ageCard")?.addEventListener("click", openBirthModal);
+        
+        // أزرار التحديث
+        document.getElementById("refreshAyah")?.addEventListener("click", () => loadDailyAyah(true));
+        document.getElementById("refreshQuote")?.addEventListener("click", () => loadQuote(true));
+        
+        // أزرار الإشعارات والإعدادات
+        document.getElementById("notificationsBtn")?.addEventListener("click", openNotificationsModal);
+        document.getElementById("settingsBtn")?.addEventListener("click", openSettingsModal);
+        
+        // أزرار المهام
+        document.getElementById("addTaskBtn")?.addEventListener("click", addTask);
+        
+        // أزرار الملاحظات
+        document.getElementById("saveNoteBtn")?.addEventListener("click", addNote);
+        document.getElementById("clearNoteBtn")?.addEventListener("click", clearNoteForm);
+        
         // أزرار تغيير المظهر
-        document.getElementById("lightModeBtn").addEventListener("click", () => {
+        document.getElementById("lightModeBtn")?.addEventListener("click", () => {
             document.documentElement.classList.remove("dark");
             document.getElementById("lightModeBtn").classList.add("bg-primary/10", "border-primary");
             document.getElementById("darkModeBtn").classList.remove("bg-primary/10", "border-primary");
@@ -1060,7 +1946,7 @@
             showNotification("تم تغيير المظهر إلى الوضع الفاتح", "success");
         });
         
-        document.getElementById("darkModeBtn").addEventListener("click", () => {
+        document.getElementById("darkModeBtn")?.addEventListener("click", () => {
             document.documentElement.classList.add("dark");
             document.getElementById("darkModeBtn").classList.add("bg-primary/10", "border-primary");
             document.getElementById("lightModeBtn").classList.remove("bg-primary/10", "border-primary");
@@ -1078,10 +1964,67 @@
             if (savedBirth) {
                 calculateAge(savedBirth);
                 updateYearProgress(savedBirth);
-                updateTimeStatistics();
+                updateYearEndStatistics();
+                setGreetingByTime();
             }
-        }, 60000); // كل دقيقة
+        }, 60000);
+        
+        // تحديث التاريخ الحالي كل ساعة
+        setInterval(() => {
+            setCurrentDateTime();
+        }, 3600000);
+        
     }
+    /* ===============================
+   تحديث قسم النظرة العامة بالأرقام الفعلية
+=============================== */
+function updateOverviewStats() {
+    // تحميل البيانات
+    const tasks = JSON.parse(localStorage.getItem(TASKS_KEY) || "[]");
+    const notes = JSON.parse(localStorage.getItem(NOTES_KEY) || "[]");
+    const ideas = JSON.parse(localStorage.getItem(IDEAS_KEY) || "[]");
+    const paths = JSON.parse(localStorage.getItem(PATHS_KEY) || "[]");
+    
+    // تحديث عدد الملاحظات
+    const notesCount = notes.length;
+    document.querySelectorAll('.grid.grid-cols-3.gap-3 .text-2xl')[0].textContent = notesCount;
+    
+    // تحديث عدد الأفكار
+    const ideasCount = ideas.length;
+    document.querySelectorAll('.grid.grid-cols-3.gap-3 .text-2xl')[1].textContent = ideasCount;
+    
+    // تحديث عدد المهام
+    const tasksCount = tasks.length;
+    document.querySelectorAll('.grid.grid-cols-3.gap-3 .text-2xl')[2].textContent = tasksCount;
+    
+    // تحديث عدد المسارات
+    const pathsCount = paths.length;
+    document.querySelectorAll('.grid.grid-cols-3.gap-3 .text-2xl')[3].textContent = pathsCount;
+    
+    // تحديث عدد الجلسات (نسبة إكمال المهام)
+    const completedTasks = tasks.filter(task => task.completed).length;
+    const sessionsCount = completedTasks;
+    document.querySelectorAll('.grid.grid-cols-3.gap-3 .text-2xl')[4].textContent = sessionsCount;
+    
+    // تحديث نسبة الإنتاجية (متوسط تقدم المسارات)
+    const totalProgress = paths.reduce((sum, path) => sum + (path.progress || 0), 0);
+    const productivity = paths.length > 0 ? Math.round(totalProgress / paths.length) : 0;
+    document.querySelectorAll('.grid.grid-cols-3.gap-3 .text-2xl')[5].textContent = `${productivity}%`;
+}
+
+/* ===============================
+   ربط الإنتاجية بنسبة إكمال المسارات
+=============================== */
+function calculateProductivityFromPaths() {
+    const paths = JSON.parse(localStorage.getItem(PATHS_KEY) || "[]");
+    
+    if (paths.length === 0) return 0;
+    
+    const totalProgress = paths.reduce((sum, path) => sum + (path.progress || 0), 0);
+    const averageProgress = totalProgress / paths.length;
+    
+    return Math.round(averageProgress);
+}
     </script>
 </body>
 </html>
