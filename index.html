@@ -147,8 +147,8 @@
             <section class="px-4 pt-4 pb-2">
                 <div id="ageCard" class="relative cursor-pointer overflow-hidden rounded-2xl bg-gradient-to-br from-surface-light to-gray-50 dark:from-surface-dark dark:to-[#261c16] p-6 shadow-lg interactive-card ring-1 ring-gray-900/5 dark:ring-white/5">
                     <div class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/5 blur-3xl"></div>
-                    <div class="absolute left-4 top-4 h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-primary">cake</span>
+                    <div class="absolute left-2 top-2 h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary ">cake</span>
                     </div>
                     
                     <div class="relative z-10 flex flex-col gap-6">
@@ -188,17 +188,7 @@
                             <span class="text-sm font-medium text-gray-700 dark:text-[#c8a992]">عيد الميلاد: <span id="birthdayText" class="text-gray-900 dark:text-white font-bold">15 نوفمبر</span></span>
                         </div>
                         
-                        <!-- معلومات إضافية -->
-                        <div class="grid grid-cols-2 gap-3 text-center">
-                            <div class="rounded-lg bg-white/50 dark:bg-black/20 p-3">
-                                <span class="text-xs text-gray-500 dark:text-[#c8a992] block mb-1">الأيام المتبقية</span>
-                                <span id="daysLived" class="text-lg font-bold text-gray-900 dark:text-white">245</span>
-                            </div>
-                            <div class="rounded-lg bg-white/50 dark:bg-black/20 p-3">
-                                <span class="text-xs text-gray-500 dark:text-[#c8a992] block mb-1">النسبة المئوية</span>
-                                <span id="yearPercentage" class="text-lg font-bold text-gray-900 dark:text-white">67%</span>
-                            </div>
-                        </div>
+                      
                     </div>
                 </div>
             </section>
@@ -398,9 +388,9 @@
             </a>
             <a class="group flex flex-col items-center gap-1 p-2" href="#">
                 <div class="flex h-10 w-12 items-center justify-center rounded-full transition-colors group-hover:bg-gray-100 dark:group-hover:bg-white/5">
-                    <span class="material-symbols-outlined text-2xl text-gray-400 dark:text-[#c8a992]">deployed_code</span>
+                    <span class="material-symbols-outlined text-2xl text-gray-400 dark:text-[#c8a992]">news</span>
                 </div>
-                <span class="text-[10px] font-medium text-gray-400 dark:text-[#c8a992]">وضع التصفح</span>
+                <span class="text-[10px] font-medium text-gray-400 dark:text-[#c8a992]">اﻷخبار</span>
             </a>
         </nav>
     </div>
@@ -763,17 +753,7 @@
         document.getElementById("birthdayText").textContent = 
             `${birth.getDate()} ${monthNames[birth.getMonth()]}`;
         
-        // حساب الأيام التي عشتها هذا العام
-        const startOfYear = new Date(now.getFullYear(), 0, 1);
-        const daysLived = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
-        document.getElementById("daysLived").textContent = daysLived;
         
-        // حساب النسبة المئوية من السنة
-        const isLeapYear = (now.getFullYear() % 4 === 0 && now.getFullYear() % 100 !== 0) || 
-                          (now.getFullYear() % 400 === 0);
-        const daysInYear = isLeapYear ? 366 : 365;
-        const percentage = Math.round((daysLived / daysInYear) * 100);
-        document.getElementById("yearPercentage").textContent = `${percentage}%`;
         
         return { age, diffDays, nextBirthday };
     }
@@ -781,27 +761,49 @@
     /* ===============================
        تحديث شريط تقدم السنة
     ================================ */
-    function updateYearProgress(birthDate) {
-        const now = new Date();
-        const startOfYear = new Date(now.getFullYear(), 0, 1);
-        const endOfYear = new Date(now.getFullYear(), 11, 31);
-        
-        const totalYearTime = endOfYear - startOfYear;
-        const elapsedTime = now - startOfYear;
-        
-        const progressPercentage = (elapsedTime / totalYearTime) * 100;
-        
-        // تحديث شريط التقدم
-        const progressBar = document.getElementById("progressBar");
-        const progressMarker = document.getElementById("progressMarker");
-        
+   function updateYearProgress(birthDate) {
+    const now = new Date();
+    const birth = new Date(birthDate);
+
+    // آخر عيد ميلاد
+    let lastBirthday = new Date(
+        now.getFullYear(),
+        birth.getMonth(),
+        birth.getDate()
+    );
+
+    if (lastBirthday > now) {
+        lastBirthday.setFullYear(lastBirthday.getFullYear() - 1);
+    }
+
+    // عيد الميلاد القادم
+    let nextBirthday = new Date(
+        lastBirthday.getFullYear() + 1,
+        birth.getMonth(),
+        birth.getDate()
+    );
+
+    const totalPeriod = nextBirthday - lastBirthday;
+    const elapsed = now - lastBirthday;
+
+    const progressPercentage = Math.min(
+        100,
+        Math.max(0, (elapsed / totalPeriod) * 100)
+    );
+
+    // تحديث الشريط
+    const progressBar = document.getElementById("progressBar");
+    const progressMarker = document.getElementById("progressMarker");
+
+    if (progressBar && progressMarker) {
         progressBar.style.width = `${progressPercentage}%`;
         progressMarker.style.left = `${100 - progressPercentage}%`;
-        
-        // إضافة تأثير تحريك
+
         progressBar.style.animation = "progressFill 1s ease-out";
         progressBar.style.setProperty("--progress-width", `${progressPercentage}%`);
     }
+}
+
     
     /* ===============================
        تحديث إحصائيات الوقت
